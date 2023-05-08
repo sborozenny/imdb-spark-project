@@ -56,3 +56,10 @@ result6_dir = 'result/res6'
 result7_dir = 'result/res7'
 result8_dir = 'result/res8'
 
+title_akas_file_path = 'imdb-data/title.akas.tsv.gz'
+name_basics_file_path = 'imdb-data/name.basics.tsv.gz'
+title_principals_file_path = 'imdb-data/title.principals.tsv.gz'
+title_basics_file_path = 'imdb-data/title.akas.tsv.gz'
+title_crew_file_path = 'imdb-data/title.crew.tsv.gz'
+title_ratings_file_path = 'imdb-data/title.ratings.tsv.gz'
+
