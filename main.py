@@ -8,6 +8,7 @@ from task2 import task2
 from task3 import task3
 from task4 import task4
 from task5 import task5
+from task6 import task6
 
 conf = SparkConf()
 conf.setMaster("local").setAppName("task арр")
@@ -24,22 +25,25 @@ def main():
                                                  schema=s.schema_title_basics)
     title_principals_df = spark.read.options(sep=r'\t').csv(s.title_principals_file_path, header=True, nullValue='null',
                                                             schema=s.schema_title_principals)
+    title_episode_df = spark.read.options(sep=r'\t').csv(s.title_episode_file_path, header=True, nullValue='null',
+                                                            schema=s.schema_title_episode)
     title_principals_df = title_principals_df.withColumn('characters',
                                                          f.when(f.col('characters').isin(r'\N', None), None).otherwise(
                                                              f.col('characters')))
     task4_df = title_principals_df.join(task2_df, "nconst", "inner") \
         .join(task3_df, 'tconst', "inner")
 
-    task5_1_df = task1_df.filter(f.col('region').isNotNull()).select(f.col('titleId').alias('tconst'),
-                                                                     f.col('region'))
+    task5_1_df = task1_df.filter(f.col('region').isNotNull()).select(f.col('titleId').alias('tconst'), f.col('region'))
     task5_2_df = task3_df.filter(f.col('isAdult') == 1)
     task5_df = task5_1_df.join(task5_2_df, 'tconst', 'inner')
 
+    task6_df = task3_df.join(title_episode_df, task3_df.tconst == title_episode_df.parentTconst, "inner")
     task1(task1_df)
     task2(task2_df)
     task3(task3_df)
     task4(task4_df)
     task5(task5_df)
+    task6(task6_df)
 
 
 if __name__ == "__main__":
