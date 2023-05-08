@@ -7,6 +7,7 @@ from task1 import task1
 from task2 import task2
 from task3 import task3
 from task4 import task4
+from task5 import task5
 
 conf = SparkConf()
 conf.setMaster("local").setAppName("task арр")
@@ -28,10 +29,17 @@ def main():
                                                              f.col('characters')))
     task4_df = title_principals_df.join(task2_df, "nconst", "inner") \
         .join(task3_df, 'tconst', "inner")
+
+    task5_1_df = task1_df.filter(f.col('region').isNotNull()).select(f.col('titleId').alias('tconst'),
+                                                                     f.col('region'))
+    task5_2_df = task3_df.filter(f.col('isAdult') == 1)
+    task5_df = task5_1_df.join(task5_2_df, 'tconst', 'inner')
+
     task1(task1_df)
     task2(task2_df)
     task3(task3_df)
     task4(task4_df)
+    task5(task5_df)
 
 
 if __name__ == "__main__":
