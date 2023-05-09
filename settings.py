@@ -37,8 +37,8 @@ schema_title_principals = t.StructType([t.StructField("tconst", t.StringType(), 
                                         t.StructField("characters", t.StringType(), True)])
 
 schema_title_ratings = t.StructType([t.StructField("tconst", t.StringType(), False),
-                                     t.StructField("averageRating", t.StringType(), True),
-                                     t.StructField("numVotes", t.StringType(), True)])
+                                     t.StructField("averageRating", t.IntegerType(), True),
+                                     t.StructField("numVotes", t.IntegerType(), True)])
 
 schema_name_basics = t.StructType([t.StructField("nconst", t.StringType(), False),
                                    t.StructField("primaryName", t.StringType(), False),

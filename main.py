@@ -2,13 +2,14 @@ import pyspark.sql.types as t
 import pyspark.sql.functions as f
 import settings as s
 from pyspark import SparkConf, SparkContext
-from pyspark.sql import SparkSession
+from pyspark.sql import SparkSession, Window
 from task1 import task1
 from task2 import task2
 from task3 import task3
 from task4 import task4
 from task5 import task5
 from task6 import task6
+from task8 import task8
 
 conf = SparkConf()
 conf.setMaster("local").setAppName("task арр")
@@ -26,10 +27,9 @@ def main():
     title_principals_df = spark.read.options(sep=r'\t').csv(s.title_principals_file_path, header=True, nullValue='null',
                                                             schema=s.schema_title_principals)
     title_episode_df = spark.read.options(sep=r'\t').csv(s.title_episode_file_path, header=True, nullValue='null',
-                                                            schema=s.schema_title_episode)
-    title_principals_df = title_principals_df.withColumn('characters',
-                                                         f.when(f.col('characters').isin(r'\N', None), None).otherwise(
-                                                             f.col('characters')))
+                                                         schema=s.schema_title_episode)
+    title_ratings_df = spark.read.options(sep=r'\t').csv(s.title_ratings_file_path, header=True, nullValue='null',
+                                                         schema=s.schema_title_ratings)
     task4_df = title_principals_df.join(task2_df, "nconst", "inner") \
         .join(task3_df, 'tconst', "inner")
 
@@ -38,12 +38,16 @@ def main():
     task5_df = task5_1_df.join(task5_2_df, 'tconst', 'inner')
 
     task6_df = task3_df.join(title_episode_df, task3_df.tconst == title_episode_df.parentTconst, "inner")
+
+    task8_df = task3_df.join(title_ratings_df, "tconst", "inner")
+
     task1(task1_df)
     task2(task2_df)
     task3(task3_df)
     task4(task4_df)
     task5(task5_df)
     task6(task6_df)
+    task8(task8_df)
 
 
 if __name__ == "__main__":
