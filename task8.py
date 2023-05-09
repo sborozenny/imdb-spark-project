@@ -9,4 +9,4 @@ def task8(df):
     window = Window.partitionBy("genres").orderBy(f.col("averageRating").desc())
     res1 = res.withColumn("top", f.row_number().over(window))
     res2 = res1.filter(f.col("top") <= 10).limit(50)
-    write(res2, s.result6_dir)
+    write(res2, s.result8_dir)
